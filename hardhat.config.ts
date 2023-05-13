@@ -4,11 +4,22 @@ import "hardhat-deploy"
 import "hardhat-contract-sizer"
 import "dotenv/config"
 import "@openzeppelin/hardhat-upgrades"
+import "hardhat-docgen";
 require('dotenv').config();
 
 const PRIVATE_KEY = process.env.PRIVATE_KEY || ""
 const GOERLI_RPC_URL = process.env.GOERLI_RPC_URL || ""
 const ETHERSCAN_API_KEY = process.env.ETHERSCAN_API_KEY || ""
+
+declare module "hardhat/types/config" {
+    interface HardhatUserConfig {
+      docgen?: {
+        path: string;
+        clear?: boolean;
+        runOnCompile?: boolean;
+      };
+    }
+  }
 
 const config: HardhatUserConfig = {
     solidity: {
@@ -73,13 +84,13 @@ const config: HardhatUserConfig = {
         },
     },
     docgen: {
-        outputDir: "./docs",
-        pages: "items",
-        collapseNewlines: true,
+        path: './docs',
+        clear: true,
+        runOnCompile: true,
     },
     mocha: {
         timeout: 300000, // 200 Seconds
     },
 }
 
-export default config
+export default config;
