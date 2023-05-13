@@ -20,5 +20,35 @@ The `RideHailing` contract allows users to request, accept, complete, and cancel
     npx hardhat run scripts/deploy.js
 
 
+## Structure
+
+- Ride: A struct that represents a ride with fields for the rider, driver, fare, and a boolean to indicate if the ride has been completed.
+- rides: A mapping from ride IDs to Ride structs.
+- registeredUsers: A mapping from addresses to booleans indicating if a user is registered.
+- rideCount: A counter to keep track of the total number of rides.
+- pricePerMeter: The fare per meter for a ride.
+
+## Events
+
+- RideRequested: Emitted when a ride is requested.
+- RideAccepted: Emitted when a ride is accepted.
+- UserRegistered: Emitted when a user is registered.
+- RideCancelled: Emitted when a ride is cancelled.
+- RideCompleted: Emitted when a ride is completed.
+
+## Functions
+
+- requestRide: Allows a registered user to request a ride.
+- registerUser: Registers a new user.
+- calculateFare: Calculates the fare for a ride based on the distance.
+- setPricePerMeter: Sets the fare per meter for a ride. This function is restricted to the contract owner.
+- getPricePerMeter: Returns the current fare per meter.
+- acceptRide: Allows a registered user to accept a ride.
+- completeRide: Allows a rider to complete a ride.
+- cancelRide: Allows a rider to cancel a ride.
+- getRide: Returns the details of a ride.
+
+
+
 
 
