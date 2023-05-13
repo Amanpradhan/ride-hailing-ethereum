@@ -1,0 +1,970 @@
+{
+  "version": "3.4",
+  "log": [
+    {
+      "@openzeppelin/contracts/access/Ownable.sol:Ownable": {
+        "src": "@openzeppelin/contracts/access/Ownable.sol:20",
+        "inherit": [
+          "@openzeppelin/contracts/utils/Context.sol:Context"
+        ],
+        "libraries": [],
+        "methods": [
+          "owner()",
+          "renounceOwnership()",
+          "transferOwnership(address)"
+        ],
+        "linkReferences": [],
+        "errors": [
+          {
+            "kind": "constructor",
+            "contract": "Ownable",
+            "src": "@openzeppelin/contracts/access/Ownable.sol:28"
+          }
+        ],
+        "layout": {
+          "storage": [
+            {
+              "label": "_owner",
+              "offset": 0,
+              "slot": "0",
+              "type": "t_address",
+              "contract": "Ownable",
+              "src": "@openzeppelin/contracts/access/Ownable.sol:21"
+            }
+          ],
+          "types": {
+            "t_address": {
+              "label": "address",
+              "numberOfBytes": "20"
+            }
+          },
+          "layoutVersion": "1.2",
+          "flat": true
+        },
+        "solcVersion": "0.8.17"
+      },
+      "@openzeppelin/contracts/utils/Context.sol:Context": {
+        "src": "@openzeppelin/contracts/utils/Context.sol:16",
+        "inherit": [],
+        "libraries": [],
+        "methods": [],
+        "linkReferences": [],
+        "errors": [],
+        "layout": {
+          "storage": [],
+          "types": {},
+          "layoutVersion": "1.2",
+          "flat": false
+        },
+        "solcVersion": "0.8.17"
+      },
+      "contracts/RideHailing.sol:RideHailing": {
+        "src": "contracts/RideHailing.sol:7",
+        "version": {
+          "withMetadata": "a7f69344bfcc9df0e1593aa5155996a253594aee4f88409058c0c6a4589892f3",
+          "withoutMetadata": "1a5e68a236ae792769f8d821686574856d2ea612244fc1770df9602cba071e8e",
+          "linkedWithoutMetadata": "1a5e68a236ae792769f8d821686574856d2ea612244fc1770df9602cba071e8e"
+        },
+        "inherit": [
+          "@openzeppelin/contracts/access/Ownable.sol:Ownable",
+          "@openzeppelin/contracts/utils/Context.sol:Context"
+        ],
+        "libraries": [],
+        "methods": [
+          "requestRide(uint256)",
+          "registerUser()",
+          "setPricePerMeter(uint256)",
+          "getPricePerMeter()",
+          "acceptRide(uint256)",
+          "completeRide(uint256)",
+          "cancelRide(uint256)",
+          "getRide(uint256)",
+          "()"
+        ],
+        "linkReferences": [],
+        "errors": [
+          {
+            "kind": "state-variable-assignment",
+            "name": "pricePerMeter",
+            "src": "contracts/RideHailing.sol:20"
+          }
+        ],
+        "layout": {
+          "storage": [
+            {
+              "label": "_owner",
+              "offset": 0,
+              "slot": "0",
+              "type": "t_address",
+              "contract": "Ownable",
+              "src": "@openzeppelin/contracts/access/Ownable.sol:21"
+            },
+            {
+              "label": "rides",
+              "offset": 0,
+              "slot": "1",
+              "type": "t_mapping(t_uint256,t_struct(Ride)149_storage)",
+              "contract": "RideHailing",
+              "src": "contracts/RideHailing.sol:17"
+            },
+            {
+              "label": "registeredUsers",
+              "offset": 0,
+              "slot": "2",
+              "type": "t_mapping(t_address,t_bool)",
+              "contract": "RideHailing",
+              "src": "contracts/RideHailing.sol:18"
+            },
+            {
+              "label": "rideCount",
+              "offset": 0,
+              "slot": "3",
+              "type": "t_uint256",
+              "contract": "RideHailing",
+              "src": "contracts/RideHailing.sol:19"
+            },
+            {
+              "label": "pricePerMeter",
+              "offset": 0,
+              "slot": "4",
+              "type": "t_uint256",
+              "contract": "RideHailing",
+              "src": "contracts/RideHailing.sol:20"
+            }
+          ],
+          "types": {
+            "t_address": {
+              "label": "address",
+              "numberOfBytes": "20"
+            },
+            "t_address_payable": {
+              "label": "address payable",
+              "numberOfBytes": "20"
+            },
+            "t_bool": {
+              "label": "bool",
+              "numberOfBytes": "1"
+            },
+            "t_mapping(t_address,t_bool)": {
+              "label": "mapping(address => bool)",
+              "numberOfBytes": "32"
+            },
+            "t_mapping(t_uint256,t_struct(Ride)149_storage)": {
+              "label": "mapping(uint256 => struct RideHailing.Ride)",
+              "numberOfBytes": "32"
+            },
+            "t_struct(Ride)149_storage": {
+              "label": "struct RideHailing.Ride",
+              "members": [
+                {
+                  "label": "rider",
+                  "type": "t_address_payable",
+                  "offset": 0,
+                  "slot": "0"
+                },
+                {
+                  "label": "driver",
+                  "type": "t_address_payable",
+                  "offset": 0,
+                  "slot": "1"
+                },
+                {
+                  "label": "fare",
+                  "type": "t_uint256",
+                  "offset": 0,
+                  "slot": "2"
+                },
+                {
+                  "label": "rideCompleted",
+                  "type": "t_bool",
+                  "offset": 0,
+                  "slot": "3"
+                }
+              ],
+              "numberOfBytes": "128"
+            },
+            "t_uint256": {
+              "label": "uint256",
+              "numberOfBytes": "32"
+            }
+          },
+          "layoutVersion": "1.2",
+          "flat": true
+        },
+        "solcVersion": "0.8.17"
+      }
+    },
+    {
+      "@openzeppelin/contracts/access/Ownable.sol:Ownable": {
+        "src": "@openzeppelin/contracts/access/Ownable.sol:20",
+        "inherit": [
+          "@openzeppelin/contracts/utils/Context.sol:Context"
+        ],
+        "libraries": [],
+        "methods": [
+          "owner()",
+          "renounceOwnership()",
+          "transferOwnership(address)"
+        ],
+        "linkReferences": [],
+        "errors": [
+          {
+            "kind": "constructor",
+            "contract": "Ownable",
+            "src": "@openzeppelin/contracts/access/Ownable.sol:28"
+          }
+        ],
+        "layout": {
+          "storage": [
+            {
+              "label": "_owner",
+              "offset": 0,
+              "slot": "0",
+              "type": "t_address",
+              "contract": "Ownable",
+              "src": "@openzeppelin/contracts/access/Ownable.sol:21"
+            }
+          ],
+          "types": {
+            "t_address": {
+              "label": "address",
+              "numberOfBytes": "20"
+            }
+          },
+          "layoutVersion": "1.2",
+          "flat": true
+        },
+        "solcVersion": "0.8.17"
+      },
+      "@openzeppelin/contracts/utils/Context.sol:Context": {
+        "src": "@openzeppelin/contracts/utils/Context.sol:16",
+        "inherit": [],
+        "libraries": [],
+        "methods": [],
+        "linkReferences": [],
+        "errors": [],
+        "layout": {
+          "storage": [],
+          "types": {},
+          "layoutVersion": "1.2",
+          "flat": false
+        },
+        "solcVersion": "0.8.17"
+      },
+      "contracts/RideHailing.sol:RideHailing": {
+        "src": "contracts/RideHailing.sol:6",
+        "version": {
+          "withMetadata": "19414f667f079af61db424696d9756ba58b96095a5766b620084a7a9bdd1ac89",
+          "withoutMetadata": "1a5e68a236ae792769f8d821686574856d2ea612244fc1770df9602cba071e8e",
+          "linkedWithoutMetadata": "1a5e68a236ae792769f8d821686574856d2ea612244fc1770df9602cba071e8e"
+        },
+        "inherit": [
+          "@openzeppelin/contracts/access/Ownable.sol:Ownable",
+          "@openzeppelin/contracts/utils/Context.sol:Context"
+        ],
+        "libraries": [],
+        "methods": [
+          "requestRide(uint256)",
+          "registerUser()",
+          "setPricePerMeter(uint256)",
+          "getPricePerMeter()",
+          "acceptRide(uint256)",
+          "completeRide(uint256)",
+          "cancelRide(uint256)",
+          "getRide(uint256)",
+          "()"
+        ],
+        "linkReferences": [],
+        "errors": [
+          {
+            "kind": "state-variable-assignment",
+            "name": "pricePerMeter",
+            "src": "contracts/RideHailing.sol:17"
+          }
+        ],
+        "layout": {
+          "storage": [
+            {
+              "label": "_owner",
+              "offset": 0,
+              "slot": "0",
+              "type": "t_address",
+              "contract": "Ownable",
+              "src": "@openzeppelin/contracts/access/Ownable.sol:21"
+            },
+            {
+              "label": "rides",
+              "offset": 0,
+              "slot": "1",
+              "type": "t_mapping(t_uint256,t_struct(Ride)148_storage)",
+              "contract": "RideHailing",
+              "src": "contracts/RideHailing.sol:14"
+            },
+            {
+              "label": "registeredUsers",
+              "offset": 0,
+              "slot": "2",
+              "type": "t_mapping(t_address,t_bool)",
+              "contract": "RideHailing",
+              "src": "contracts/RideHailing.sol:15"
+            },
+            {
+              "label": "rideCount",
+              "offset": 0,
+              "slot": "3",
+              "type": "t_uint256",
+              "contract": "RideHailing",
+              "src": "contracts/RideHailing.sol:16"
+            },
+            {
+              "label": "pricePerMeter",
+              "offset": 0,
+              "slot": "4",
+              "type": "t_uint256",
+              "contract": "RideHailing",
+              "src": "contracts/RideHailing.sol:17"
+            }
+          ],
+          "types": {
+            "t_address": {
+              "label": "address",
+              "numberOfBytes": "20"
+            },
+            "t_address_payable": {
+              "label": "address payable",
+              "numberOfBytes": "20"
+            },
+            "t_bool": {
+              "label": "bool",
+              "numberOfBytes": "1"
+            },
+            "t_mapping(t_address,t_bool)": {
+              "label": "mapping(address => bool)",
+              "numberOfBytes": "32"
+            },
+            "t_mapping(t_uint256,t_struct(Ride)148_storage)": {
+              "label": "mapping(uint256 => struct RideHailing.Ride)",
+              "numberOfBytes": "32"
+            },
+            "t_struct(Ride)148_storage": {
+              "label": "struct RideHailing.Ride",
+              "members": [
+                {
+                  "label": "rider",
+                  "type": "t_address_payable",
+                  "offset": 0,
+                  "slot": "0"
+                },
+                {
+                  "label": "driver",
+                  "type": "t_address_payable",
+                  "offset": 0,
+                  "slot": "1"
+                },
+                {
+                  "label": "fare",
+                  "type": "t_uint256",
+                  "offset": 0,
+                  "slot": "2"
+                },
+                {
+                  "label": "rideCompleted",
+                  "type": "t_bool",
+                  "offset": 0,
+                  "slot": "3"
+                }
+              ],
+              "numberOfBytes": "128"
+            },
+            "t_uint256": {
+              "label": "uint256",
+              "numberOfBytes": "32"
+            }
+          },
+          "layoutVersion": "1.2",
+          "flat": true
+        },
+        "solcVersion": "0.8.17"
+      }
+    },
+    {
+      "@openzeppelin/contracts/access/Ownable.sol:Ownable": {
+        "src": "@openzeppelin/contracts/access/Ownable.sol:20",
+        "inherit": [
+          "@openzeppelin/contracts/utils/Context.sol:Context"
+        ],
+        "libraries": [],
+        "methods": [
+          "owner()",
+          "renounceOwnership()",
+          "transferOwnership(address)"
+        ],
+        "linkReferences": [],
+        "errors": [
+          {
+            "kind": "constructor",
+            "contract": "Ownable",
+            "src": "@openzeppelin/contracts/access/Ownable.sol:28"
+          }
+        ],
+        "layout": {
+          "storage": [
+            {
+              "label": "_owner",
+              "offset": 0,
+              "slot": "0",
+              "type": "t_address",
+              "contract": "Ownable",
+              "src": "@openzeppelin/contracts/access/Ownable.sol:21"
+            }
+          ],
+          "types": {
+            "t_address": {
+              "label": "address",
+              "numberOfBytes": "20"
+            }
+          },
+          "layoutVersion": "1.2",
+          "flat": true
+        },
+        "solcVersion": "0.8.17"
+      },
+      "@openzeppelin/contracts/utils/Context.sol:Context": {
+        "src": "@openzeppelin/contracts/utils/Context.sol:16",
+        "inherit": [],
+        "libraries": [],
+        "methods": [],
+        "linkReferences": [],
+        "errors": [],
+        "layout": {
+          "storage": [],
+          "types": {},
+          "layoutVersion": "1.2",
+          "flat": false
+        },
+        "solcVersion": "0.8.17"
+      },
+      "contracts/RideHailing.sol:RideHailing": {
+        "src": "contracts/RideHailing.sol:6",
+        "version": {
+          "withMetadata": "683e91df48e599b436d665d82a1866f24fa1fe189fade61424a0142b552cd333",
+          "withoutMetadata": "1a5e68a236ae792769f8d821686574856d2ea612244fc1770df9602cba071e8e",
+          "linkedWithoutMetadata": "1a5e68a236ae792769f8d821686574856d2ea612244fc1770df9602cba071e8e"
+        },
+        "inherit": [
+          "@openzeppelin/contracts/access/Ownable.sol:Ownable",
+          "@openzeppelin/contracts/utils/Context.sol:Context"
+        ],
+        "libraries": [],
+        "methods": [
+          "requestRide(uint256)",
+          "registerUser()",
+          "setPricePerMeter(uint256)",
+          "getPricePerMeter()",
+          "acceptRide(uint256)",
+          "completeRide(uint256)",
+          "cancelRide(uint256)",
+          "getRide(uint256)",
+          "()"
+        ],
+        "linkReferences": [],
+        "errors": [
+          {
+            "kind": "state-variable-assignment",
+            "name": "pricePerMeter",
+            "src": "contracts/RideHailing.sol:17"
+          }
+        ],
+        "layout": {
+          "storage": [
+            {
+              "label": "_owner",
+              "offset": 0,
+              "slot": "0",
+              "type": "t_address",
+              "contract": "Ownable",
+              "src": "@openzeppelin/contracts/access/Ownable.sol:21"
+            },
+            {
+              "label": "rides",
+              "offset": 0,
+              "slot": "1",
+              "type": "t_mapping(t_uint256,t_struct(Ride)148_storage)",
+              "contract": "RideHailing",
+              "src": "contracts/RideHailing.sol:14"
+            },
+            {
+              "label": "registeredUsers",
+              "offset": 0,
+              "slot": "2",
+              "type": "t_mapping(t_address,t_bool)",
+              "contract": "RideHailing",
+              "src": "contracts/RideHailing.sol:15"
+            },
+            {
+              "label": "rideCount",
+              "offset": 0,
+              "slot": "3",
+              "type": "t_uint256",
+              "contract": "RideHailing",
+              "src": "contracts/RideHailing.sol:16"
+            },
+            {
+              "label": "pricePerMeter",
+              "offset": 0,
+              "slot": "4",
+              "type": "t_uint256",
+              "contract": "RideHailing",
+              "src": "contracts/RideHailing.sol:17"
+            }
+          ],
+          "types": {
+            "t_address": {
+              "label": "address",
+              "numberOfBytes": "20"
+            },
+            "t_address_payable": {
+              "label": "address payable",
+              "numberOfBytes": "20"
+            },
+            "t_bool": {
+              "label": "bool",
+              "numberOfBytes": "1"
+            },
+            "t_mapping(t_address,t_bool)": {
+              "label": "mapping(address => bool)",
+              "numberOfBytes": "32"
+            },
+            "t_mapping(t_uint256,t_struct(Ride)148_storage)": {
+              "label": "mapping(uint256 => struct RideHailing.Ride)",
+              "numberOfBytes": "32"
+            },
+            "t_struct(Ride)148_storage": {
+              "label": "struct RideHailing.Ride",
+              "members": [
+                {
+                  "label": "rider",
+                  "type": "t_address_payable",
+                  "offset": 0,
+                  "slot": "0"
+                },
+                {
+                  "label": "driver",
+                  "type": "t_address_payable",
+                  "offset": 0,
+                  "slot": "1"
+                },
+                {
+                  "label": "fare",
+                  "type": "t_uint256",
+                  "offset": 0,
+                  "slot": "2"
+                },
+                {
+                  "label": "rideCompleted",
+                  "type": "t_bool",
+                  "offset": 0,
+                  "slot": "3"
+                }
+              ],
+              "numberOfBytes": "128"
+            },
+            "t_uint256": {
+              "label": "uint256",
+              "numberOfBytes": "32"
+            }
+          },
+          "layoutVersion": "1.2",
+          "flat": true
+        },
+        "solcVersion": "0.8.17"
+      }
+    },
+    {
+      "@openzeppelin/contracts/access/Ownable.sol:Ownable": {
+        "src": "@openzeppelin/contracts/access/Ownable.sol:20",
+        "inherit": [
+          "@openzeppelin/contracts/utils/Context.sol:Context"
+        ],
+        "libraries": [],
+        "methods": [
+          "owner()",
+          "renounceOwnership()",
+          "transferOwnership(address)"
+        ],
+        "linkReferences": [],
+        "errors": [
+          {
+            "kind": "constructor",
+            "contract": "Ownable",
+            "src": "@openzeppelin/contracts/access/Ownable.sol:28"
+          }
+        ],
+        "layout": {
+          "storage": [
+            {
+              "label": "_owner",
+              "offset": 0,
+              "slot": "0",
+              "type": "t_address",
+              "contract": "Ownable",
+              "src": "@openzeppelin/contracts/access/Ownable.sol:21"
+            }
+          ],
+          "types": {
+            "t_address": {
+              "label": "address",
+              "numberOfBytes": "20"
+            }
+          },
+          "layoutVersion": "1.2",
+          "flat": true
+        },
+        "solcVersion": "0.8.17"
+      },
+      "@openzeppelin/contracts/utils/Context.sol:Context": {
+        "src": "@openzeppelin/contracts/utils/Context.sol:16",
+        "inherit": [],
+        "libraries": [],
+        "methods": [],
+        "linkReferences": [],
+        "errors": [],
+        "layout": {
+          "storage": [],
+          "types": {},
+          "layoutVersion": "1.2",
+          "flat": false
+        },
+        "solcVersion": "0.8.17"
+      },
+      "contracts/RideHailing.sol:RideHailing": {
+        "src": "contracts/RideHailing.sol:6",
+        "version": {
+          "withMetadata": "ca0e3f0503a8436d46664ab96fc46588c9afc40775da6a8b6f6b027cbe87de03",
+          "withoutMetadata": "7ef357b9ae5a5ffe44d99e467e1c7de85051f6008f603cf041da50397ebf5b96",
+          "linkedWithoutMetadata": "7ef357b9ae5a5ffe44d99e467e1c7de85051f6008f603cf041da50397ebf5b96"
+        },
+        "inherit": [
+          "@openzeppelin/contracts/access/Ownable.sol:Ownable",
+          "@openzeppelin/contracts/utils/Context.sol:Context"
+        ],
+        "libraries": [],
+        "methods": [
+          "requestRide(uint256)",
+          "registerUser()",
+          "setPricePerMeter(uint256)",
+          "getPricePerMeter()",
+          "acceptRide(uint256)",
+          "completeRide(uint256)",
+          "cancelRide(uint256)",
+          "getRide(uint256)",
+          "()"
+        ],
+        "linkReferences": [],
+        "errors": [
+          {
+            "kind": "state-variable-assignment",
+            "name": "pricePerMeter",
+            "src": "contracts/RideHailing.sol:17"
+          }
+        ],
+        "layout": {
+          "storage": [
+            {
+              "label": "_owner",
+              "offset": 0,
+              "slot": "0",
+              "type": "t_address",
+              "contract": "Ownable",
+              "src": "@openzeppelin/contracts/access/Ownable.sol:21"
+            },
+            {
+              "label": "rides",
+              "offset": 0,
+              "slot": "1",
+              "type": "t_mapping(t_uint256,t_struct(Ride)148_storage)",
+              "contract": "RideHailing",
+              "src": "contracts/RideHailing.sol:14"
+            },
+            {
+              "label": "registeredUsers",
+              "offset": 0,
+              "slot": "2",
+              "type": "t_mapping(t_address,t_bool)",
+              "contract": "RideHailing",
+              "src": "contracts/RideHailing.sol:15"
+            },
+            {
+              "label": "rideCount",
+              "offset": 0,
+              "slot": "3",
+              "type": "t_uint256",
+              "contract": "RideHailing",
+              "src": "contracts/RideHailing.sol:16"
+            },
+            {
+              "label": "pricePerMeter",
+              "offset": 0,
+              "slot": "4",
+              "type": "t_uint256",
+              "contract": "RideHailing",
+              "src": "contracts/RideHailing.sol:17"
+            }
+          ],
+          "types": {
+            "t_address": {
+              "label": "address",
+              "numberOfBytes": "20"
+            },
+            "t_address_payable": {
+              "label": "address payable",
+              "numberOfBytes": "20"
+            },
+            "t_bool": {
+              "label": "bool",
+              "numberOfBytes": "1"
+            },
+            "t_mapping(t_address,t_bool)": {
+              "label": "mapping(address => bool)",
+              "numberOfBytes": "32"
+            },
+            "t_mapping(t_uint256,t_struct(Ride)148_storage)": {
+              "label": "mapping(uint256 => struct RideHailing.Ride)",
+              "numberOfBytes": "32"
+            },
+            "t_struct(Ride)148_storage": {
+              "label": "struct RideHailing.Ride",
+              "members": [
+                {
+                  "label": "rider",
+                  "type": "t_address_payable",
+                  "offset": 0,
+                  "slot": "0"
+                },
+                {
+                  "label": "driver",
+                  "type": "t_address_payable",
+                  "offset": 0,
+                  "slot": "1"
+                },
+                {
+                  "label": "fare",
+                  "type": "t_uint256",
+                  "offset": 0,
+                  "slot": "2"
+                },
+                {
+                  "label": "rideCompleted",
+                  "type": "t_bool",
+                  "offset": 0,
+                  "slot": "3"
+                }
+              ],
+              "numberOfBytes": "128"
+            },
+            "t_uint256": {
+              "label": "uint256",
+              "numberOfBytes": "32"
+            }
+          },
+          "layoutVersion": "1.2",
+          "flat": true
+        },
+        "solcVersion": "0.8.17"
+      }
+    },
+    {
+      "@openzeppelin/contracts/access/Ownable.sol:Ownable": {
+        "src": "@openzeppelin/contracts/access/Ownable.sol:20",
+        "inherit": [
+          "@openzeppelin/contracts/utils/Context.sol:Context"
+        ],
+        "libraries": [],
+        "methods": [
+          "owner()",
+          "renounceOwnership()",
+          "transferOwnership(address)"
+        ],
+        "linkReferences": [],
+        "errors": [
+          {
+            "kind": "constructor",
+            "contract": "Ownable",
+            "src": "@openzeppelin/contracts/access/Ownable.sol:28"
+          }
+        ],
+        "layout": {
+          "storage": [
+            {
+              "label": "_owner",
+              "offset": 0,
+              "slot": "0",
+              "type": "t_address",
+              "contract": "Ownable",
+              "src": "@openzeppelin/contracts/access/Ownable.sol:21"
+            }
+          ],
+          "types": {
+            "t_address": {
+              "label": "address",
+              "numberOfBytes": "20"
+            }
+          },
+          "layoutVersion": "1.2",
+          "flat": true
+        },
+        "solcVersion": "0.8.17"
+      },
+      "@openzeppelin/contracts/utils/Context.sol:Context": {
+        "src": "@openzeppelin/contracts/utils/Context.sol:16",
+        "inherit": [],
+        "libraries": [],
+        "methods": [],
+        "linkReferences": [],
+        "errors": [],
+        "layout": {
+          "storage": [],
+          "types": {},
+          "layoutVersion": "1.2",
+          "flat": false
+        },
+        "solcVersion": "0.8.17"
+      },
+      "contracts/RideHailing.sol:RideHailing": {
+        "src": "contracts/RideHailing.sol:6",
+        "version": {
+          "withMetadata": "87f274eb2f3981dc2ed19247ce6a6772d1c39edbf9a8f45dcef6db7b165cb836",
+          "withoutMetadata": "7ef357b9ae5a5ffe44d99e467e1c7de85051f6008f603cf041da50397ebf5b96",
+          "linkedWithoutMetadata": "7ef357b9ae5a5ffe44d99e467e1c7de85051f6008f603cf041da50397ebf5b96"
+        },
+        "inherit": [
+          "@openzeppelin/contracts/access/Ownable.sol:Ownable",
+          "@openzeppelin/contracts/utils/Context.sol:Context"
+        ],
+        "libraries": [],
+        "methods": [
+          "requestRide(uint256)",
+          "registerUser()",
+          "setPricePerMeter(uint256)",
+          "getPricePerMeter()",
+          "acceptRide(uint256)",
+          "completeRide(uint256)",
+          "cancelRide(uint256)",
+          "getRide(uint256)",
+          "()"
+        ],
+        "linkReferences": [],
+        "errors": [
+          {
+            "kind": "state-variable-assignment",
+            "name": "pricePerMeter",
+            "src": "contracts/RideHailing.sol:17"
+          }
+        ],
+        "layout": {
+          "storage": [
+            {
+              "label": "_owner",
+              "offset": 0,
+              "slot": "0",
+              "type": "t_address",
+              "contract": "Ownable",
+              "src": "@openzeppelin/contracts/access/Ownable.sol:21"
+            },
+            {
+              "label": "rides",
+              "offset": 0,
+              "slot": "1",
+              "type": "t_mapping(t_uint256,t_struct(Ride)148_storage)",
+              "contract": "RideHailing",
+              "src": "contracts/RideHailing.sol:14"
+            },
+            {
+              "label": "registeredUsers",
+              "offset": 0,
+              "slot": "2",
+              "type": "t_mapping(t_address,t_bool)",
+              "contract": "RideHailing",
+              "src": "contracts/RideHailing.sol:15"
+            },
+            {
+              "label": "rideCount",
+              "offset": 0,
+              "slot": "3",
+              "type": "t_uint256",
+              "contract": "RideHailing",
+              "src": "contracts/RideHailing.sol:16"
+            },
+            {
+              "label": "pricePerMeter",
+              "offset": 0,
+              "slot": "4",
+              "type": "t_uint256",
+              "contract": "RideHailing",
+              "src": "contracts/RideHailing.sol:17"
+            }
+          ],
+          "types": {
+            "t_address": {
+              "label": "address",
+              "numberOfBytes": "20"
+            },
+            "t_address_payable": {
+              "label": "address payable",
+              "numberOfBytes": "20"
+            },
+            "t_bool": {
+              "label": "bool",
+              "numberOfBytes": "1"
+            },
+            "t_mapping(t_address,t_bool)": {
+              "label": "mapping(address => bool)",
+              "numberOfBytes": "32"
+            },
+            "t_mapping(t_uint256,t_struct(Ride)148_storage)": {
+              "label": "mapping(uint256 => struct RideHailing.Ride)",
+              "numberOfBytes": "32"
+            },
+            "t_struct(Ride)148_storage": {
+              "label": "struct RideHailing.Ride",
+              "members": [
+                {
+                  "label": "rider",
+                  "type": "t_address_payable",
+                  "offset": 0,
+                  "slot": "0"
+                },
+                {
+                  "label": "driver",
+                  "type": "t_address_payable",
+                  "offset": 0,
+                  "slot": "1"
+                },
+                {
+                  "label": "fare",
+                  "type": "t_uint256",
+                  "offset": 0,
+                  "slot": "2"
+                },
+                {
+                  "label": "rideCompleted",
+                  "type": "t_bool",
+                  "offset": 0,
+                  "slot": "3"
+                }
+              ],
+              "numberOfBytes": "128"
+            },
+            "t_uint256": {
+              "label": "uint256",
+              "numberOfBytes": "32"
+            }
+          },
+          "layoutVersion": "1.2",
+          "flat": true
+        },
+        "solcVersion": "0.8.17"
+      }
+    }
+  ]
+}
