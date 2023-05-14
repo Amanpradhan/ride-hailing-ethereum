@@ -2,8 +2,8 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "/Users/amanpradhan/Documents/ride-hailing-ethereum/contracts/RideHailing.sol": {
-      "lastModificationDate": 1683984457283,
-      "contentHash": "7303be0f953be298d19a0b5141e744b1",
+      "lastModificationDate": 1684071276556,
+      "contentHash": "f69df496ef953f4e78ab2fa7328f4d8e",
       "sourceName": "contracts/RideHailing.sol",
       "solcConfig": {
         "version": "0.8.17",

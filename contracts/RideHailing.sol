@@ -80,9 +80,10 @@ contract RideHailing is Ownable {
             require(msg.value >= ride.fare);
             // require(address(this).balance >= ride.fare, "Not enough funds to complete"); // add this while accepting a ride as well, incorrect, write payable
             ride.rideCompleted = true;
+            emit RideCompleted(ride.rider, _rideId);
             ride.driver.transfer(ride.fare);
             // ride.driver.transfer(ride.fare);
-            emit RideCompleted(ride.rider, _rideId);
+
         }
 
         /// @notice Cancel a ride
@@ -93,8 +94,8 @@ contract RideHailing is Ownable {
             require(ride.driver == address(0), "Ride already accepted, cannot cancel");
             require(!ride.rideCompleted, "Ride already completed");
             ride.rideCompleted = true;
-            payable(ride.rider).transfer(ride.fare);
             emit RideCancelled(msg.sender, _rideId);
+            payable(ride.rider).transfer(ride.fare);
         }
 
         function getRide(uint256 _rideId) public view returns (Ride memory ride) {
