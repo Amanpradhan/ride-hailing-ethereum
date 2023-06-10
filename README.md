@@ -49,6 +49,13 @@ The `RideHailing` contract allows users to request, accept, complete, and cancel
 - getRide: Returns the details of a ride.
 
 
+## Upcoming Features
 
+1. Getting distance through maps
+2. Giving user estimated time
+3. Adding surge pricing : office hours, night time
+4. Giving driver rating
+5. Front end (trying to add through ethersjs)
+6. Feature for adding a range for the estimated pricing
 
 
