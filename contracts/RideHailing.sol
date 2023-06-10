@@ -2,9 +2,12 @@
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "@chainlink/contracts/src/v0.8/ChainlinkClient.sol";
+
 
 /// @title A Ride Hailing smart contract
-contract RideHailing is Ownable {
+contract RideHailing is Ownable, ChainlinkClient {
+    using Chainlink for Chainlink.Request;
 
         /// @dev Structure to hold ride information
         struct Ride {
@@ -25,16 +28,28 @@ contract RideHailing is Ownable {
         event RideCancelled(address indexed rider, uint256 indexed rideId);
         event RideCompleted(address indexed rider, uint256 indexed rideId);
 
+        address private oracle;
+        bytes32 private jobId;
+        uint private fee;
+
+        constructor(address _oracle, bytes32 _jobId, uint256 _fee) {
+            oracle = _oracle;
+            jobId = _jobId;
+            fee = _fee;
+        }
+
 
         /// @notice Request a ride
-        /// @param _distance The distance of the ride in meters
-        function requestRide(uint256 _distance) public payable {
+        /// @param _pickup The pickup location
+        /// @param _drop The drop location
+        function requestRide(string memory _pickup, string memory _drop) public payable {
             require(registeredUsers[msg.sender], "User not registered");
-            uint256 fare = calculateFare(_distance);
-            require(msg.value >= fare, "Not enough funds sent");
+            uint256 fare = calculateFare(_pickup, _drop);
+            require(msg.value <= fare, "Not enough funds sent");
             rides[rideCount] = Ride(payable(msg.sender), payable (address(0)), fare, false);
             emit RideRequested(msg.sender, rideCount, fare);
             rideCount++;
+            
         }
 
         /// @notice Register a new user
@@ -45,9 +60,35 @@ contract RideHailing is Ownable {
         }
 
         /// @dev Calculate fare based on distance
-        /// @param _distance The distance of the ride in meters
-        function calculateFare(uint256 _distance) internal view returns (uint256) {
-            return _distance * pricePerMeter;
+        /// @param _pickup The pickup location
+        /// @param _drop The drop location
+    
+        function calculateFare(string memory _pickup, string memory _drop) internal  returns (uint256) {
+            uint256 distance = calculateDistance(_pickup, _drop);
+            return distance * pricePerMeter;
+        }
+
+        function getApiKey() internal view returns (string memory) {
+            string memory apiKey = [DISTANCE_MATRIX_API_KEY];
+            return apiKey;
+        }
+
+        /// @dev Callback function for Chainlink oracle response
+        function fulfillPrice(bytes32 _requestId, uint256 _price) public returns (uint256) {
+            return _price;
+        }
+        
+
+        /// @dev Calculate distance based on address
+        /// @param _pickup The pickup location
+        /// @param _drop The drop location
+        function calculateDistance(string memory _pickup, string memory _drop) internal returns (uint256) {
+            Chainlink.Request memory request = buildChainlinkRequest(jobId, address(this), this.fulfillPrice.selector);
+            request.add("url", "https://maps.googleapis.com/...");
+            request.add("queryParams", string(abi.encode("Pickup=", _pickup, "&drop=", _drop, "&api_key=", getApiKey())));
+            bytes32 b = sendChainlinkRequestTo(oracle, request, fee);
+            uint256 a = 1;
+            return a;
         }
 
         /// @notice Set the price per meter
