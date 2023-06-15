@@ -27,24 +27,36 @@ contract RideHailing is Ownable, ChainlinkClient {
         event UserRegistered(address indexed user);
         event RideCancelled(address indexed rider, uint256 indexed rideId);
         event RideCompleted(address indexed rider, uint256 indexed rideId);
+        event RequestVolume(bytes32 _requestId, string _status);
 
         address private oracle;
         bytes32 private jobId;
         uint private fee;
+        uint256 public distance;
+        string public status;
+        uint256 public fare;
 
-        constructor(address _oracle, bytes32 _jobId, uint256 _fee) {
-            oracle = _oracle;
-            jobId = _jobId;
-            fee = _fee;
+        constructor() {
+            // oracle = _oracle;
+            // jobId = _jobId;
+            // fee = _fee;
+            setChainlinkToken(0x326C977E6efc84E512bB9C30f76E30c160eD06FB); // 
+            setChainlinkOracle(0x40193c8518BB267228Fc409a613bDbD8eC5a97b3);
+            oracle = 0x40193c8518BB267228Fc409a613bDbD8eC5a97b3;
+            // jobId ="ca98366cc7314957b8c012c72f05aeeb"; //  for uint256
+            jobId = "7d80a6386ef543a3abb52817f6707e3b"; // for string
+            fee = (1 * LINK_DIVISIBILITY) / 10; // 0.1 * 10**18 (Varies by network and job)
+            fare = 0; //need to change this later
         }
+
 
 
         /// @notice Request a ride
         /// @param _pickup The pickup location
         /// @param _drop The drop location
-        function requestRide(string memory _pickup, string memory _drop) public payable {
+        function requestRide(string memory _pickup, string memory _drop) public payable  {
             require(registeredUsers[msg.sender], "User not registered");
-            uint256 fare = calculateFare(_pickup, _drop);
+            calculateFare(_pickup, _drop);
             require(msg.value <= fare, "Not enough funds sent");
             rides[rideCount] = Ride(payable(msg.sender), payable (address(0)), fare, false);
             emit RideRequested(msg.sender, rideCount, fare);
@@ -60,36 +72,55 @@ contract RideHailing is Ownable, ChainlinkClient {
         }
 
         /// @dev Calculate fare based on distance
-        /// @param _pickup The pickup location
-        /// @param _drop The drop location
-    
+        //maps api : AIzaSyACCZp_FmIFN1TgV7n6GnN1zuEvES1Q3GM
+        // example : https://maps.googleapis.com/maps/api/distancematrix/json?destinations=Taj%20Mahal&origins=Red%20Fort&units=imperial&key=AIzaSyACCZp_FmIFN1TgV7n6GnN1zuEvES1Q3GM
         function calculateFare(string memory _pickup, string memory _drop) internal  returns (uint256) {
-            uint256 distance = calculateDistance(_pickup, _drop);
+            calculateDistance(_pickup, _drop);
             return distance * pricePerMeter;
         }
 
-        function getApiKey() internal view returns (string memory) {
-            string memory apiKey = "AIzaSyBjWjyLuJuUOL50OUjeoJP_kk1VYmxxqqE";
+        function getApiKey() internal pure returns (string memory) {
+            // string memory apiKey = [DISTANCE_MATRIX_API_KEY];
+            string memory apiKey = "AIzaSyACCZp_FmIFN1TgV7n6GnN1zuEvES1Q3GM";
             return apiKey;
         }
 
         /// @dev Callback function for Chainlink oracle response
-        function fulfillPrice(bytes32 _requestId, uint256 _price) public returns (uint256) {
-            return _price;
+        function fulfillDistance(
+            bytes32 _requestId,
+            string memory _status
+        ) public recordChainlinkFulfillment(_requestId) {
+            emit RequestVolume(_requestId, _status);
+            status = _status;
         }
-        
 
-        /// @dev Calculate distance based on address
-        /// @param _pickup The pickup location
-        /// @param _drop The drop location
-        function calculateDistance(string memory _pickup, string memory _drop) internal returns (uint256) {
-            Chainlink.Request memory request = buildChainlinkRequest(jobId, address(this), this.fulfillPrice.selector);
-            request.add("url", "https://maps.googleapis.com/...");
-            request.add("queryParams", string(abi.encode("Pickup=", _pickup, "&drop=", _drop, "&api_key=", getApiKey())));
-            bytes32 b = sendChainlinkRequestTo(oracle, request, fee);
-            // TODO: add error handling
-            uint256 a = 1;
-            return a;
+        //      function fulfillDistance2(
+        //     bytes32 _requestId,
+        //     string memory _status
+        // ) public recordChainlinkFulfillment(_requestId) {
+        //     emit RequestVolume(_requestId, _status);
+        //     status = _status;
+        // }
+
+        /// @dev requestRide based on address
+        function calculateDistance(string memory _pickup, string memory _drop) internal {
+            // Chainlink.Request memory request = buildChainlinkRequest(jobId, address(this), this.fulfillPrice.selector);
+            // request.add("url", "https://maps.googleapis.com/");
+            // request.add("queryParams", string(abi.encode("Pickup=", _pickup, "&drop=", _drop, "&api_key=", getApiKey())));
+            Chainlink.Request memory req = buildChainlinkRequest(
+            jobId,
+            address(this),
+            this.fulfillDistance.selector
+            );
+            // AIzaSyDF0rgz17j9QPI94NwD8RPic8ktViw8yIU
+            req.add(
+            "get",
+            "https://maps.googleapis.com/maps/api/distancematrix/json?destinations=Taj%20Mahal&origins=Red%20Fort&units=imperial&key=AIzaSyDF0rgz17j9QPI94NwD8RPic8ktViw8yIU"
+            );
+
+            req.add("path", "status");
+            sendChainlinkRequest(req, fee);
+    
         }
 
         /// @notice Set the price per meter
