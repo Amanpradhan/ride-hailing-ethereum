@@ -69,7 +69,7 @@ contract RideHailing is Ownable, ChainlinkClient {
         }
 
         function getApiKey() internal view returns (string memory) {
-            string memory apiKey = [DISTANCE_MATRIX_API_KEY];
+            string memory apiKey = "AIzaSyBjWjyLuJuUOL50OUjeoJP_kk1VYmxxqqE";
             return apiKey;
         }
 
@@ -87,6 +87,7 @@ contract RideHailing is Ownable, ChainlinkClient {
             request.add("url", "https://maps.googleapis.com/...");
             request.add("queryParams", string(abi.encode("Pickup=", _pickup, "&drop=", _drop, "&api_key=", getApiKey())));
             bytes32 b = sendChainlinkRequestTo(oracle, request, fee);
+            // TODO: add error handling
             uint256 a = 1;
             return a;
         }

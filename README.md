@@ -58,4 +58,4 @@ The `RideHailing` contract allows users to request, accept, complete, and cancel
 5. Front end (trying to add through ethersjs)
 6. Feature for adding a range for the estimated pricing
 
-
+TODO: assume KYC, implement later (driver)
