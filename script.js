@@ -8,6 +8,7 @@ const signer = provider.getSigner();
 
 // Load the RideHailing contract using its address and ABI
 const contractAddress = '0x3B148D7b70A940015D9626D0878B5B5B6Fdbf8f5';
+
 async function loadContractABI() {
   try {
     const response = await fetch('./contractABI.json');
