@@ -41,9 +41,6 @@ contract RideHailing is Ownable, ChainlinkClient {
         // string public estdTime;
 
         constructor() {
-            // oracle = _oracle;
-            // jobId = _jobId;
-            // fee = _fee;
             setChainlinkToken(0x326C977E6efc84E512bB9C30f76E30c160eD06FB); // 
             setChainlinkOracle(0x40193c8518BB267228Fc409a613bDbD8eC5a97b3);
             oracle = 0x40193c8518BB267228Fc409a613bDbD8eC5a97b3;
@@ -62,7 +59,7 @@ contract RideHailing is Ownable, ChainlinkClient {
         function requestRide(string memory _pickup, string memory _drop) public payable  {
             require(registeredUsers[msg.sender], "User not registered");
             calculateFare(_pickup, _drop);
-            require(msg.value <= 0, "Not enough funds sent"); // TODO: set 0 to actual fare vallue
+            require(msg.value >= 0, "Not enough funds sent"); // TODO: set 0 to actual fare vallue
             rides[rideCount] = Ride(payable(msg.sender), payable (address(0)), 0, false, "", 0);
             emit RideRequested(msg.sender, rideCount, 0);
             rideCount++;
@@ -84,7 +81,7 @@ contract RideHailing is Ownable, ChainlinkClient {
 
         function getApiKey() internal pure returns (string memory) {
             // string memory apiKey = [DISTANCE_MATRIX_API_KEY];
-            string memory apiKey = "AIzaSyACCZp_FmIFN1TgV7n6GnN1zuEvES1Q3GM";
+            string memory apiKey = "AIzaSyDF0rgz17j9QPI94NwD8RPic8ktViw8yIU";
             return apiKey;
         }
 
@@ -111,21 +108,24 @@ contract RideHailing is Ownable, ChainlinkClient {
 
         /// @dev requestRide based on address
         function calculateDistance(string memory _pickup, string memory _drop) internal {
-            // Chainlink.Request memory request = buildChainlinkRequest(jobId, address(this), this.fulfillPrice.selector);
-            // request.add("url", "https://maps.googleapis.com/");
-            // request.add("queryParams", string(abi.encode("Pickup=", _pickup, "&drop=", _drop, "&api_key=", getApiKey())));
             Chainlink.Request memory req = buildChainlinkRequest(
             jobId,
             address(this),
             this.fulfillDistance.selector
             );
-            req.add(
-            "get",
-            "https://maps.googleapis.com/maps/api/distancematrix/json?destinations=Taj%20Mahal&origins=Red%20Fort&units=imperial&key=AIzaSyDF0rgz17j9QPI94NwD8RPic8ktViw8yIU"
-            );
+            // req.add(
+            // "get",
+            // "https://maps.googleapis.com/maps/api/distancematrix/json?destinations=Taj%20Mahal&origins=Red%20Fort&units=imperial&key=AIzaSyDF0rgz17j9QPI94NwD8RPic8ktViw8yIU"
+            // );
+        
 
-            req.add("path", "rows, 0, elements, 0, distance, text");
-            // req.add("path", "status");
+            string memory baseUrl = "https://maps.googleapis.com/maps/api/distancematrix/json";
+            string memory units = "imperial";
+            string memory queryParams = string(abi.encodePacked("origins=", _pickup, "&destinations=", _drop, "&units=", units, "&key=", getApiKey()));
+            req.add("get", string(abi.encodePacked(baseUrl, "?", queryParams)));
+            // req.add("path", "rows, 0, elements, 0, distance, text");
+            // req.add("path", "destination_addresses, 0");
+            req.add("path", "status");
             sendChainlinkRequest(req, fee);
     
         }
