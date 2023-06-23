@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RideHailing App</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>RideHailing App</h1>
+
+  <!-- Add HTML elements for user interface components -->
+  <!-- For example, input fields, buttons, etc. -->
+  <input type="text" id="pickupInput" placeholder="Enter pickup location">
+  <input type="text" id="dropInput" placeholder="Enter drop location">
+  <button id="requestButton">Request Ride</button>
+
+  <button id="connectButton">Connect to MetaMask</button>
+
+  <script src="script.js"></script>
+  <script>
+    const requestButton = document.getElementById('requestButton');
+    const pickupInput = document.getElementById('pickupInput');
+    const dropInput = document.getElementById('dropInput');
+    const connectButton = document.getElementById('connectButton');
+
+    requestButton.addEventListener('click', () => {
+      const pickup = pickupInput.value;
+      const drop = dropInput.value;
+      requestRide(pickup, drop);
+    });
+
+    connectButton.addEventListener('click', connectToMetaMask);
+  </script>
+</body>
+</html>

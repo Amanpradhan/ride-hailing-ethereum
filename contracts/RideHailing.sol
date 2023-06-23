@@ -15,6 +15,8 @@ contract RideHailing is Ownable, ChainlinkClient {
             address payable driver;
             uint256 fare;   
             bool rideCompleted;
+            string estdTime;
+            uint256 rating;
         }
 
         mapping (uint256 => Ride) public rides;
@@ -28,13 +30,15 @@ contract RideHailing is Ownable, ChainlinkClient {
         event RideCancelled(address indexed rider, uint256 indexed rideId);
         event RideCompleted(address indexed rider, uint256 indexed rideId);
         event RequestVolume(bytes32 _requestId, string _status);
+        event DriverRated(address indexed rider, uint256 indexed rideId, uint256 rating);
 
         address private oracle;
         bytes32 private jobId;
         uint private fee;
         uint256 public distance;
         string public status;
-        uint256 public fare;
+        // uint256 public fare;
+        // string public estdTime;
 
         constructor() {
             // oracle = _oracle;
@@ -46,7 +50,8 @@ contract RideHailing is Ownable, ChainlinkClient {
             // jobId ="ca98366cc7314957b8c012c72f05aeeb"; //  for uint256
             jobId = "7d80a6386ef543a3abb52817f6707e3b"; // for string
             fee = (1 * LINK_DIVISIBILITY) / 10; // 0.1 * 10**18 (Varies by network and job)
-            fare = 0; //need to change this later
+            // fare = 0; //need to change this later
+            // estdTime = ""; //need to change this later
         }
 
 
@@ -57,9 +62,9 @@ contract RideHailing is Ownable, ChainlinkClient {
         function requestRide(string memory _pickup, string memory _drop) public payable  {
             require(registeredUsers[msg.sender], "User not registered");
             calculateFare(_pickup, _drop);
-            require(msg.value <= fare, "Not enough funds sent");
-            rides[rideCount] = Ride(payable(msg.sender), payable (address(0)), fare, false);
-            emit RideRequested(msg.sender, rideCount, fare);
+            require(msg.value <= 0, "Not enough funds sent"); // TODO: set 0 to actual fare vallue
+            rides[rideCount] = Ride(payable(msg.sender), payable (address(0)), 0, false, "", 0);
+            emit RideRequested(msg.sender, rideCount, 0);
             rideCount++;
             
         }
@@ -72,8 +77,6 @@ contract RideHailing is Ownable, ChainlinkClient {
         }
 
         /// @dev Calculate fare based on distance
-        //maps api : AIzaSyACCZp_FmIFN1TgV7n6GnN1zuEvES1Q3GM
-        // example : https://maps.googleapis.com/maps/api/distancematrix/json?destinations=Taj%20Mahal&origins=Red%20Fort&units=imperial&key=AIzaSyACCZp_FmIFN1TgV7n6GnN1zuEvES1Q3GM
         function calculateFare(string memory _pickup, string memory _drop) internal  returns (uint256) {
             calculateDistance(_pickup, _drop);
             return distance * pricePerMeter;
@@ -85,6 +88,18 @@ contract RideHailing is Ownable, ChainlinkClient {
             return apiKey;
         }
 
+        function surgePricing(uint256 baseFare) internal view returns (uint256) {
+            uint256 surgeMultiplier = 100;
+
+            uint256 currentHour = (block.timestamp / 3600) % 24; // Get the current hour
+
+            if ((currentHour >= 9 && currentHour < 11) || (currentHour >= 16 && currentHour < 18) || (currentHour >= 0 && currentHour < 4)) {
+                surgeMultiplier = 133; // 1.33x surge pricing
+            }
+
+            return (baseFare * surgeMultiplier) / 100;
+        }
+
         /// @dev Callback function for Chainlink oracle response
         function fulfillDistance(
             bytes32 _requestId,
@@ -93,14 +108,6 @@ contract RideHailing is Ownable, ChainlinkClient {
             emit RequestVolume(_requestId, _status);
             status = _status;
         }
-
-        //      function fulfillDistance2(
-        //     bytes32 _requestId,
-        //     string memory _status
-        // ) public recordChainlinkFulfillment(_requestId) {
-        //     emit RequestVolume(_requestId, _status);
-        //     status = _status;
-        // }
 
         /// @dev requestRide based on address
         function calculateDistance(string memory _pickup, string memory _drop) internal {
@@ -112,13 +119,13 @@ contract RideHailing is Ownable, ChainlinkClient {
             address(this),
             this.fulfillDistance.selector
             );
-            // AIzaSyDF0rgz17j9QPI94NwD8RPic8ktViw8yIU
             req.add(
             "get",
             "https://maps.googleapis.com/maps/api/distancematrix/json?destinations=Taj%20Mahal&origins=Red%20Fort&units=imperial&key=AIzaSyDF0rgz17j9QPI94NwD8RPic8ktViw8yIU"
             );
 
-            req.add("path", "status");
+            req.add("path", "rows, 0, elements, 0, distance, text");
+            // req.add("path", "status");
             sendChainlinkRequest(req, fee);
     
         }
@@ -146,14 +153,16 @@ contract RideHailing is Ownable, ChainlinkClient {
 
         /// @notice Complete a ride
         /// @param _rideId The ID of the ride to complete
-        function completeRide(uint256 _rideId) public payable {
+        function completeRideAndRateDriver(uint256 _rideId, uint256 _rating) public payable {
             Ride storage ride = rides[_rideId];
             require(ride.rider == msg.sender, "Only rider can complete the ride");
             require(!ride.rideCompleted, "Ride already completed");
             require(msg.value >= ride.fare);
             // require(address(this).balance >= ride.fare, "Not enough funds to complete"); // add this while accepting a ride as well, incorrect, write payable
             ride.rideCompleted = true;
+            ride.rating = _rating;
             emit RideCompleted(ride.rider, _rideId);
+            emit DriverRated(ride.rider, _rideId, _rating);
             ride.driver.transfer(ride.fare);
             // ride.driver.transfer(ride.fare);
 
