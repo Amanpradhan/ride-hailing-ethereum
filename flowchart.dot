@@ -1,0 +1,15 @@
+digraph Flowchart {
+  start [shape=ellipse, label="Start"]
+  request [shape=box, label="Request Ride"]
+  accept [shape=box, label="Accept Ride"]
+  complete [shape=box, label="Complete Ride"]
+  cancel [shape=box, label="Cancel Ride"]
+  end [shape=ellipse, label="End"]
+
+  start -> request
+  request -> accept
+  accept -> complete
+  accept -> cancel
+  complete -> end
+  cancel -> end
+}
