@@ -35,7 +35,7 @@ describe("RideHailing", function() {
   describe("Ride requests", function() {
     it("Should fail if user is not registered", async function() {
       await expect(
-        rideHailing.connect(addr1).requestRide(100)
+        rideHailing.connect(addr1).requestRide("taj mahal", "red fort")
       ).to.be.revertedWith("User not registered");
     });
 
@@ -43,7 +43,7 @@ describe("RideHailing", function() {
       await rideHailing.connect(addr1).registerUser();
 
       await expect(
-        rideHailing.connect(addr1).requestRide(100, {value: ethers.utils.parseEther("0.1")})
+        rideHailing.connect(addr1).requestRide("taj mahal", "red fort", {value: ethers.utils.parseEther("0.1")})
       ).to.emit(rideHailing, 'RideRequested');
     });
   });
@@ -66,7 +66,7 @@ describe("RideHailing", function() {
       await rideHailing.connect(addr2).registerUser();
   
       // Request a ride
-      await rideHailing.connect(addr1).requestRide(10, { value: 1000000 });
+      await rideHailing.connect(addr1).requestRide("taj mahal", "red fort", { value: 1000000 });
   
       // Accept the ride
       await rideHailing.connect(addr2).acceptRide(0);
@@ -80,7 +80,7 @@ describe("RideHailing", function() {
       await rideHailing.connect(addr2).registerUser();
   
       // Request and accept a ride
-      await rideHailing.connect(addr1).requestRide(10, { value: 1000000 });
+      await rideHailing.connect(addr1).requestRide("taj mahal", "red fort", { value: 1000000 });
       await rideHailing.connect(addr2).acceptRide(0);
   
       // Complete the ride
@@ -93,7 +93,7 @@ describe("RideHailing", function() {
     it("Should cancel a ride", async function () {
       // Register the user and request a ride
       await rideHailing.connect(addr1).registerUser();
-      await rideHailing.connect(addr1).requestRide(10, { value: 10000 });
+      await rideHailing.connect(addr1).requestRide("taj mahal", "red fort", { value: 10000 });
   
       // Cancel the ride
       await rideHailing.connect(addr1).cancelRide(0);

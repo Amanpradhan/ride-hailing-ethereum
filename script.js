@@ -13,6 +13,9 @@ const registerUserButton = document.getElementById('registerUserButton');
 const pickupInput = document.getElementById('pickupInput');
 const dropInput = document.getElementById('dropInput');
 const connectButton = document.getElementById('connectButton');
+const cancelRideButton = document.getElementById('cancelButton');
+const completeRideButton = document.getElementById('completeButton');
+
 
 requestButton.addEventListener('click', () => {
     const pickup = pickupInput.value;
@@ -93,6 +96,38 @@ async function getPricePerMeter() {
         console.error(error);
     }
 }
+
+// Example function for canceling a ride
+async function cancelRide(rideId) {
+  try {
+    const tx = await contract.cancelRide(rideId, { value: ethers.utils.parseEther('0') });
+    await tx.wait();
+    console.log('Ride canceled');
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+// Bind cancel ride button to cancelRide function
+cancelRideButton.addEventListener('click', async () => {
+  const rideId = 0;
+  await cancelRide(rideId);
+});
+
+async function completeRide(rideId) {
+  try {
+    const tx = await contract.completeRideAndRateDriver(rideId, 5, { value: ethers.utils.parseEther('0') });
+    await tx.wait();
+    console.log('Ride completed');
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+completeRideButton.addEventListener('click', async () => {
+  const rideId = 0;
+  await completeRide(rideId);
+});
 
 // Check if MetaMask is connected
 if (window.ethereum) {

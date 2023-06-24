@@ -47,11 +47,18 @@ contract RideHailing is Ownable, ChainlinkClient {
             // jobId ="ca98366cc7314957b8c012c72f05aeeb"; //  for uint256
             jobId = "7d80a6386ef543a3abb52817f6707e3b"; // for string
             fee = (1 * LINK_DIVISIBILITY) / 10; // 0.1 * 10**18 (Varies by network and job)
+            distance = 10; // hard code this for now and will populate ride struct with chainllink response
             // fare = 0; //need to change this later
             // estdTime = ""; //need to change this later
         }
 
 
+        /// @notice Register a new user
+         function registerUser() public {
+            require(!registeredUsers[msg.sender], "User already registered");
+            registeredUsers[msg.sender] = true;
+            emit UserRegistered(msg.sender);
+        }
 
         /// @notice Request a ride
         /// @param _pickup The pickup location
@@ -66,59 +73,35 @@ contract RideHailing is Ownable, ChainlinkClient {
             
         }
 
-        /// @notice Register a new user
-         function registerUser() public {
-            require(!registeredUsers[msg.sender], "User already registered");
-            registeredUsers[msg.sender] = true;
-            emit UserRegistered(msg.sender);
-        }
-
         /// @dev Calculate fare based on distance
         function calculateFare(string memory _pickup, string memory _drop) internal  returns (uint256) {
             calculateDistance(_pickup, _drop);
-            return distance * pricePerMeter;
+            return surgePricing(distance * pricePerMeter);
         }
 
         function getApiKey() internal pure returns (string memory) {
-            // string memory apiKey = [DISTANCE_MATRIX_API_KEY];
             string memory apiKey = "AIzaSyDF0rgz17j9QPI94NwD8RPic8ktViw8yIU";
             return apiKey;
         }
 
         function surgePricing(uint256 baseFare) internal view returns (uint256) {
             uint256 surgeMultiplier = 100;
-
             uint256 currentHour = (block.timestamp / 3600) % 24; // Get the current hour
-
             if ((currentHour >= 9 && currentHour < 11) || (currentHour >= 16 && currentHour < 18) || (currentHour >= 0 && currentHour < 4)) {
                 surgeMultiplier = 133; // 1.33x surge pricing
             }
-
             return (baseFare * surgeMultiplier) / 100;
         }
 
         /// @dev Callback function for Chainlink oracle response
-        function fulfillDistance(
-            bytes32 _requestId,
-            string memory _status
-        ) public recordChainlinkFulfillment(_requestId) {
+        function fulfillDistance(bytes32 _requestId, string memory _status) public recordChainlinkFulfillment(_requestId) {
             emit RequestVolume(_requestId, _status);
             status = _status;
         }
 
         /// @dev requestRide based on address
         function calculateDistance(string memory _pickup, string memory _drop) internal {
-            Chainlink.Request memory req = buildChainlinkRequest(
-            jobId,
-            address(this),
-            this.fulfillDistance.selector
-            );
-            // req.add(
-            // "get",
-            // "https://maps.googleapis.com/maps/api/distancematrix/json?destinations=Taj%20Mahal&origins=Red%20Fort&units=imperial&key=AIzaSyDF0rgz17j9QPI94NwD8RPic8ktViw8yIU"
-            // );
-        
-
+            Chainlink.Request memory req = buildChainlinkRequest(jobId, address(this), this.fulfillDistance.selector);
             string memory baseUrl = "https://maps.googleapis.com/maps/api/distancematrix/json";
             string memory units = "imperial";
             string memory queryParams = string(abi.encodePacked("origins=", _pickup, "&destinations=", _drop, "&units=", units, "&key=", getApiKey()));

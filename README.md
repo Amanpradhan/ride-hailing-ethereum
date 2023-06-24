@@ -51,14 +51,15 @@ The `RideHailing` contract allows users to request, accept, complete, and cancel
 
 ## Upcoming Features
 
-1. Getting distance through maps - done - to do tomorrow
-2. Giving user estimated time - done - to do tomorrow
+1. Getting distance through maps - to do tomorrow
+2. Giving user estimated time - to do tomorrow
 3. Adding surge pricing : office hours, night time - Done - to do tomorrow
 4. Giving driver rating - done
 5. Front end (trying to add through ethersjs) - done - make separate frontend (See)
 6. Feature for adding a range for the estimated pricing - not sure how to do
 7. Find way to safeguard api key - to do today
 8. Add change to build request properly - done
-9. Assign fare and time correctly
+9. Assign fare and time correctly and add it to ride struct
+10. Fix frontend - add changes for cancel and complete ride
 
 TODO: assume KYC, implement later (driver)

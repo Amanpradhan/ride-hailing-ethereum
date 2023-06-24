@@ -34,13 +34,24 @@ export declare namespace RideHailing {
     driver: PromiseOrValue<string>;
     fare: PromiseOrValue<BigNumberish>;
     rideCompleted: PromiseOrValue<boolean>;
+    estdTime: PromiseOrValue<string>;
+    rating: PromiseOrValue<BigNumberish>;
   };
 
-  export type RideStructOutput = [string, string, BigNumber, boolean] & {
+  export type RideStructOutput = [
+    string,
+    string,
+    BigNumber,
+    boolean,
+    string,
+    BigNumber
+  ] & {
     rider: string;
     driver: string;
     fare: BigNumber;
     rideCompleted: boolean;
+    estdTime: string;
+    rating: BigNumber;
   };
 }
 
@@ -48,8 +59,9 @@ export interface RideHailingInterface extends utils.Interface {
   functions: {
     "acceptRide(uint256)": FunctionFragment;
     "cancelRide(uint256)": FunctionFragment;
-    "completeRide(uint256)": FunctionFragment;
-    "fulfillPrice(bytes32,uint256)": FunctionFragment;
+    "completeRideAndRateDriver(uint256,uint256)": FunctionFragment;
+    "distance()": FunctionFragment;
+    "fulfillDistance(bytes32,string)": FunctionFragment;
     "getPricePerMeter()": FunctionFragment;
     "getRide(uint256)": FunctionFragment;
     "owner()": FunctionFragment;
@@ -61,6 +73,7 @@ export interface RideHailingInterface extends utils.Interface {
     "rideCount()": FunctionFragment;
     "rides(uint256)": FunctionFragment;
     "setPricePerMeter(uint256)": FunctionFragment;
+    "status()": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
   };
 
@@ -68,8 +81,9 @@ export interface RideHailingInterface extends utils.Interface {
     nameOrSignatureOrTopic:
       | "acceptRide"
       | "cancelRide"
-      | "completeRide"
-      | "fulfillPrice"
+      | "completeRideAndRateDriver"
+      | "distance"
+      | "fulfillDistance"
       | "getPricePerMeter"
       | "getRide"
       | "owner"
@@ -81,6 +95,7 @@ export interface RideHailingInterface extends utils.Interface {
       | "rideCount"
       | "rides"
       | "setPricePerMeter"
+      | "status"
       | "transferOwnership"
   ): FunctionFragment;
 
@@ -93,12 +108,13 @@ export interface RideHailingInterface extends utils.Interface {
     values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
-    functionFragment: "completeRide",
-    values: [PromiseOrValue<BigNumberish>]
+    functionFragment: "completeRideAndRateDriver",
+    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>]
   ): string;
+  encodeFunctionData(functionFragment: "distance", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "fulfillPrice",
-    values: [PromiseOrValue<BytesLike>, PromiseOrValue<BigNumberish>]
+    functionFragment: "fulfillDistance",
+    values: [PromiseOrValue<BytesLike>, PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
     functionFragment: "getPricePerMeter",
@@ -138,6 +154,7 @@ export interface RideHailingInterface extends utils.Interface {
     functionFragment: "setPricePerMeter",
     values: [PromiseOrValue<BigNumberish>]
   ): string;
+  encodeFunctionData(functionFragment: "status", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "transferOwnership",
     values: [PromiseOrValue<string>]
@@ -146,11 +163,12 @@ export interface RideHailingInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: "acceptRide", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "cancelRide", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "completeRide",
+    functionFragment: "completeRideAndRateDriver",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "distance", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "fulfillPrice",
+    functionFragment: "fulfillDistance",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -185,6 +203,7 @@ export interface RideHailingInterface extends utils.Interface {
     functionFragment: "setPricePerMeter",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "status", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "transferOwnership",
     data: BytesLike
@@ -194,7 +213,9 @@ export interface RideHailingInterface extends utils.Interface {
     "ChainlinkCancelled(bytes32)": EventFragment;
     "ChainlinkFulfilled(bytes32)": EventFragment;
     "ChainlinkRequested(bytes32)": EventFragment;
+    "DriverRated(address,uint256,uint256)": EventFragment;
     "OwnershipTransferred(address,address)": EventFragment;
+    "RequestVolume(bytes32,string)": EventFragment;
     "RideAccepted(address,uint256)": EventFragment;
     "RideCancelled(address,uint256)": EventFragment;
     "RideCompleted(address,uint256)": EventFragment;
@@ -205,7 +226,9 @@ export interface RideHailingInterface extends utils.Interface {
   getEvent(nameOrSignatureOrTopic: "ChainlinkCancelled"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "ChainlinkFulfilled"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "ChainlinkRequested"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "DriverRated"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "RequestVolume"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "RideAccepted"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "RideCancelled"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "RideCompleted"): EventFragment;
@@ -246,6 +269,18 @@ export type ChainlinkRequestedEvent = TypedEvent<
 export type ChainlinkRequestedEventFilter =
   TypedEventFilter<ChainlinkRequestedEvent>;
 
+export interface DriverRatedEventObject {
+  rider: string;
+  rideId: BigNumber;
+  rating: BigNumber;
+}
+export type DriverRatedEvent = TypedEvent<
+  [string, BigNumber, BigNumber],
+  DriverRatedEventObject
+>;
+
+export type DriverRatedEventFilter = TypedEventFilter<DriverRatedEvent>;
+
 export interface OwnershipTransferredEventObject {
   previousOwner: string;
   newOwner: string;
@@ -257,6 +292,17 @@ export type OwnershipTransferredEvent = TypedEvent<
 
 export type OwnershipTransferredEventFilter =
   TypedEventFilter<OwnershipTransferredEvent>;
+
+export interface RequestVolumeEventObject {
+  _requestId: string;
+  _status: string;
+}
+export type RequestVolumeEvent = TypedEvent<
+  [string, string],
+  RequestVolumeEventObject
+>;
+
+export type RequestVolumeEventFilter = TypedEventFilter<RequestVolumeEvent>;
 
 export interface RideAcceptedEventObject {
   driver: string;
@@ -350,14 +396,17 @@ export interface RideHailing extends BaseContract {
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    completeRide(
+    completeRideAndRateDriver(
       _rideId: PromiseOrValue<BigNumberish>,
+      _rating: PromiseOrValue<BigNumberish>,
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    fulfillPrice(
+    distance(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    fulfillDistance(
       _requestId: PromiseOrValue<BytesLike>,
-      _price: PromiseOrValue<BigNumberish>,
+      _status: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -399,11 +448,13 @@ export interface RideHailing extends BaseContract {
       arg0: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<
-      [string, string, BigNumber, boolean] & {
+      [string, string, BigNumber, boolean, string, BigNumber] & {
         rider: string;
         driver: string;
         fare: BigNumber;
         rideCompleted: boolean;
+        estdTime: string;
+        rating: BigNumber;
       }
     >;
 
@@ -411,6 +462,8 @@ export interface RideHailing extends BaseContract {
       newPrice: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
+
+    status(overrides?: CallOverrides): Promise<[string]>;
 
     transferOwnership(
       newOwner: PromiseOrValue<string>,
@@ -428,14 +481,17 @@ export interface RideHailing extends BaseContract {
     overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  completeRide(
+  completeRideAndRateDriver(
     _rideId: PromiseOrValue<BigNumberish>,
+    _rating: PromiseOrValue<BigNumberish>,
     overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  fulfillPrice(
+  distance(overrides?: CallOverrides): Promise<BigNumber>;
+
+  fulfillDistance(
     _requestId: PromiseOrValue<BytesLike>,
-    _price: PromiseOrValue<BigNumberish>,
+    _status: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -475,11 +531,13 @@ export interface RideHailing extends BaseContract {
     arg0: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides
   ): Promise<
-    [string, string, BigNumber, boolean] & {
+    [string, string, BigNumber, boolean, string, BigNumber] & {
       rider: string;
       driver: string;
       fare: BigNumber;
       rideCompleted: boolean;
+      estdTime: string;
+      rating: BigNumber;
     }
   >;
 
@@ -487,6 +545,8 @@ export interface RideHailing extends BaseContract {
     newPrice: PromiseOrValue<BigNumberish>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
+
+  status(overrides?: CallOverrides): Promise<string>;
 
   transferOwnership(
     newOwner: PromiseOrValue<string>,
@@ -504,16 +564,19 @@ export interface RideHailing extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    completeRide(
+    completeRideAndRateDriver(
       _rideId: PromiseOrValue<BigNumberish>,
+      _rating: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    fulfillPrice(
+    distance(overrides?: CallOverrides): Promise<BigNumber>;
+
+    fulfillDistance(
       _requestId: PromiseOrValue<BytesLike>,
-      _price: PromiseOrValue<BigNumberish>,
+      _status: PromiseOrValue<string>,
       overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    ): Promise<void>;
 
     getPricePerMeter(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -547,11 +610,13 @@ export interface RideHailing extends BaseContract {
       arg0: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<
-      [string, string, BigNumber, boolean] & {
+      [string, string, BigNumber, boolean, string, BigNumber] & {
         rider: string;
         driver: string;
         fare: BigNumber;
         rideCompleted: boolean;
+        estdTime: string;
+        rating: BigNumber;
       }
     >;
 
@@ -559,6 +624,8 @@ export interface RideHailing extends BaseContract {
       newPrice: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<void>;
+
+    status(overrides?: CallOverrides): Promise<string>;
 
     transferOwnership(
       newOwner: PromiseOrValue<string>,
@@ -588,6 +655,17 @@ export interface RideHailing extends BaseContract {
       id?: PromiseOrValue<BytesLike> | null
     ): ChainlinkRequestedEventFilter;
 
+    "DriverRated(address,uint256,uint256)"(
+      rider?: PromiseOrValue<string> | null,
+      rideId?: PromiseOrValue<BigNumberish> | null,
+      rating?: null
+    ): DriverRatedEventFilter;
+    DriverRated(
+      rider?: PromiseOrValue<string> | null,
+      rideId?: PromiseOrValue<BigNumberish> | null,
+      rating?: null
+    ): DriverRatedEventFilter;
+
     "OwnershipTransferred(address,address)"(
       previousOwner?: PromiseOrValue<string> | null,
       newOwner?: PromiseOrValue<string> | null
@@ -596,6 +674,12 @@ export interface RideHailing extends BaseContract {
       previousOwner?: PromiseOrValue<string> | null,
       newOwner?: PromiseOrValue<string> | null
     ): OwnershipTransferredEventFilter;
+
+    "RequestVolume(bytes32,string)"(
+      _requestId?: null,
+      _status?: null
+    ): RequestVolumeEventFilter;
+    RequestVolume(_requestId?: null, _status?: null): RequestVolumeEventFilter;
 
     "RideAccepted(address,uint256)"(
       driver?: PromiseOrValue<string> | null,
@@ -654,14 +738,17 @@ export interface RideHailing extends BaseContract {
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    completeRide(
+    completeRideAndRateDriver(
       _rideId: PromiseOrValue<BigNumberish>,
+      _rating: PromiseOrValue<BigNumberish>,
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    fulfillPrice(
+    distance(overrides?: CallOverrides): Promise<BigNumber>;
+
+    fulfillDistance(
       _requestId: PromiseOrValue<BytesLike>,
-      _price: PromiseOrValue<BigNumberish>,
+      _status: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -707,6 +794,8 @@ export interface RideHailing extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
+    status(overrides?: CallOverrides): Promise<BigNumber>;
+
     transferOwnership(
       newOwner: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -724,14 +813,17 @@ export interface RideHailing extends BaseContract {
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    completeRide(
+    completeRideAndRateDriver(
       _rideId: PromiseOrValue<BigNumberish>,
+      _rating: PromiseOrValue<BigNumberish>,
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    fulfillPrice(
+    distance(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    fulfillDistance(
       _requestId: PromiseOrValue<BytesLike>,
-      _price: PromiseOrValue<BigNumberish>,
+      _status: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -776,6 +868,8 @@ export interface RideHailing extends BaseContract {
       newPrice: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
+
+    status(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     transferOwnership(
       newOwner: PromiseOrValue<string>,
