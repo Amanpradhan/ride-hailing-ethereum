@@ -6,24 +6,77 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RideHailing App</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .input-group {
+            margin-bottom: 10px;
+        }
+
+        .input-group input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            font-size: 16px;
+        }
+
+        .input-group button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+
+        .input-group button:hover {
+            background-color: #45a049;
+        }
+    </style>
 </head>
 
 <body>
     <h1>RideHailing App</h1>
 
-    <!-- Add HTML elements for user interface components -->
-    <!-- For example, input fields, buttons, etc. -->
-    <input type="text" id="pickupInput" placeholder="Enter pickup location">
-    <input type="text" id="dropInput" placeholder="Enter drop location">
-    <button id="requestButton">Request Ride</button>
-    <button id="registerUserButton">Register User</button>
-    <button id="cancelButton">Cancel Ride</button>
-    <button id="completeButton">Complete Ride</button>
-    <button id="connectButton">Connect to MetaMask</button>
+    <div class="container">
+        <div class="input-group">
+            <input type="text" id="pickupInput" placeholder="Enter pickup location">
+        </div>
+        <div class="input-group">
+            <input type="text" id="dropInput" placeholder="Enter drop location">
+        </div>
+        <div class="input-group">
+            <button id="requestButton">Request Ride</button>
+        </div>
+        <div class="input-group">
+            <button id="registerUserButton">Register User</button>
+        </div>
+        <div class="input-group">
+            <button id="cancelButton">Cancel Ride</button>
+        </div>
+        <div class="input-group">
+            <button id="completeButton">Complete Ride</button>
+        </div>
+        <div class="input-group">
+            <button id="connectButton">Connect to MetaMask</button>
+        </div>
+    </div>
 
     <script type="module" src="./script.js"></script>
-    <!-- <script type="module">
-    </script> -->
 </body>
 
 </html>
