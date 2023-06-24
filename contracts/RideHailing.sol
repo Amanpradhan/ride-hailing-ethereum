@@ -37,6 +37,7 @@ contract RideHailing is Ownable, ChainlinkClient {
         uint private fee;
         uint256 public distance;
         string public status;
+        uint256 public finalPrice;
         // uint256 public fare;
         // string public estdTime;
 
@@ -76,7 +77,8 @@ contract RideHailing is Ownable, ChainlinkClient {
         /// @dev Calculate fare based on distance
         function calculateFare(string memory _pickup, string memory _drop) internal  returns (uint256) {
             calculateDistance(_pickup, _drop);
-            return surgePricing(distance * pricePerMeter);
+            finalPrice = surgePricing(distance * pricePerMeter);
+            return finalPrice;
         }
 
         function getApiKey() internal pure returns (string memory) {
@@ -106,6 +108,10 @@ contract RideHailing is Ownable, ChainlinkClient {
             string memory units = "imperial";
             string memory queryParams = string(abi.encodePacked("origins=", _pickup, "&destinations=", _drop, "&units=", units, "&key=", getApiKey()));
             req.add("get", string(abi.encodePacked(baseUrl, "?", queryParams)));
+            // req.add(
+            // "get",
+            // "https://maps.googleapis.com/maps/api/distancematrix/json?destinations=Taj%20Mahal&origins=Red%20Fort&units=imperial&key=AIzaSyDF0rgz17j9QPI94NwD8RPic8ktViw8yIU"
+            // );
             // req.add("path", "rows, 0, elements, 0, distance, text");
             // req.add("path", "destination_addresses, 0");
             req.add("path", "status");

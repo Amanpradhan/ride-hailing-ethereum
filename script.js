@@ -34,7 +34,7 @@ const provider = new ethers.providers.Web3Provider(window.ethereum);
 const signer = provider.getSigner();
 
 // Load the RideHailing contract using its address and ABI
-const contractAddress = '0xDD98A7F52E27E3071AA5654718F6b000d703a213';
+const contractAddress = '0x78ACa10824ffb8902C90c86A1cCE70340397C160';
 
 // async function loadContractABI() {
 //   try {
